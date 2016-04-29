@@ -1,0 +1,34 @@
+machine:
+  timezone:
+    America/Denver
+  node:
+    version: 4
+  services:
+    - rabbitmq-server
+dependencies:
+  pre:
+    - rm -rf ~/$CIRCLE_PROJECT_REPONAME/node_modules
+    - sudo rabbitmq-plugins enable rabbitmq_management
+    - npm install -g npm@3
+test:
+  override:
+    - npm run ci
+deployment:
+  staging:
+    branch: master
+    commands:
+      - npm install -g modulus
+      - npm run build
+      - modulus config set api_uri https://api-leisure-link.mod.ec
+      - echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" >> ~/$CIRCLE_PROJECT_REPONAME/.npmrc
+      - modulus deploy -p $CIRCLE_PROJECT_REPONAME-staging
+  production:
+    tag: /v.*/
+    commands:
+      - npm install -g modulus
+      - npm run build
+      - modulus config set api_uri https://api-leisure-link.mod.ec
+      - echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" >> ~/$CIRCLE_PROJECT_REPONAME/.npmrc
+      - openssl genpkey -outform PEM -out ~/$CIRCLE_PROJECT_REPONAME/$CIRCLE_PROJECT_REPONAME-key.pem -algorithm rsa -pkeyopt rsa_keygen_bits:2048
+      - openssl rsa -inform PEM -in ~/$CIRCLE_PROJECT_REPONAME/$CIRCLE_PROJECT_REPONAME-key.pem -pubout -out ~/$CIRCLE_PROJECT_REPONAME/$CIRCLE_PROJECT_REPONAME-key.pub
+      - modulus deploy -p $CIRCLE_PROJECT_REPONAME

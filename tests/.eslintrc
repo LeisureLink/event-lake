@@ -1,0 +1,12 @@
+{
+  "env": {
+    "mocha": true
+  },
+  "globals": {
+    "sinon": true,
+    "setupMagicbus": true,
+    "Magicbus": true,
+    "expect": true,
+    "sandbox": true
+  }
+}
