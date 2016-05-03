@@ -13,7 +13,9 @@ module.exports = {
     '#/rabbitmq/port',
     '#/rabbitmq/username',
     '#/rabbitmq/password',
-    '#/mongo/uri'
+    '#/mongo/uri',
+    '#/google/project_id',
+    '#/google/keyfile',
   ],
   optional: [ ]
 };

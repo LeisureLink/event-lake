@@ -1,13 +1,17 @@
-import events from './events';
+import transformEvent from './transform-event';
+import CreateWriteStream from '../event-write-stream';
+
+let events = CreateWriteStream();
 
 export default async (context) =>{
   const { magicbus } = context;
-  const { subscriber } = magicbus;
+  const { consumer } = magicbus;
 
-  subscriber.on(events.domain.onUpdated, (event, data) =>{
-    console.log(event, data);
-  });
+  const handler = (payload, messageTypes, raw) => {
+    let transformed = transformEvent(payload, messageTypes, raw);
+    return events.write(transformed);
+  };
 
-  await subscriber.startSubscription();
+  await consumer.startConsuming(handler);
   return context;
 };

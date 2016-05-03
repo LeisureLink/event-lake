@@ -1,0 +1,30 @@
+[
+  {"name": "correlationId", "type": "string", "mode": "required"},
+  {"name": "event", "type": "record", "mode": "required", "fields": [
+    {"name": "references", "type": "record", "mode": "repeated", "fields": [
+      {"name": "source", "type": "string", "mode": "required"},
+      {"name": "id", "type": "string", "mode": "required"}
+    ]},
+    {"name": "payload", "type": "string", "mode": "required"},
+    {"name": "properties", "type": "record", "mode": "repeated", "fields": [
+      {"name": "name", "type": "string", "mode": "required"},
+      {"name": "value", "type": "string", "mode": "required"}
+    ]},
+    {"name": "headers", "type": "record", "mode": "repeated", "fields": [
+      {"name": "name", "type": "string", "mode": "required"},
+      {"name": "value", "type": "string", "mode": "required"}
+    ]}
+  ]},
+  {"name": "types", "type": "string", "mode": "repeated"},
+  {"name": "when", "type": "timestamp", "mode": "required"},
+  {"name": "by", "type": "record", "mode": "repeated", "fields": [
+    {"name": "endpoint", "type": "record", "mode": "nullable", "fields": [
+      {"name": "id", "type": "string", "mode": "required"},
+      {"name": "token", "type": "string", "mode": "required"}
+    ]},
+    {"name": "user", "type": "record", "mode": "nullable", "fields": [
+      {"name": "id", "type": "string", "mode": "required"},
+      {"name": "token", "type": "string", "mode": "required"}
+    ]}
+  ]}
+]

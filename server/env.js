@@ -91,8 +91,9 @@ let config = {
   logs:{
     host: process.env.LOGSTASH_HOST
   },
-  mongo:{
-    uri: get('mongo_uri')
+  google:{
+    projectId: get('google_project_id'),
+    keyPath: get('google_keyfile')
   }
 };
 if(process.env.DEBUG || isEnv('local')){

@@ -6,7 +6,7 @@ import { Server } from 'hapi';
 import pkg from '../package';
 import env from './env';
 import registerPlugins from './plugins';
-import setupMongo from './db';
+import setupDb from './db';
 import setupMagicbus from './magicbus';
 import setupListeners from './listeners';
 
@@ -36,7 +36,7 @@ hapiServer.connection({
   context = { server, ...}
 */
 export default registerPlugins(hapiServer)
-  .then(setupMongo)
+  .then(setupDb)
   .then(setupMagicbus)
   .then(setupListeners)
   .then(context => {

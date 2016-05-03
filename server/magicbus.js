@@ -12,8 +12,7 @@ import {
 
 // import fs from 'fs';
 let broker = magicbus.createBroker('imp', 'event-lake', rabbitConfig);
-let subscriber = magicbus.createSubscriber(broker);
-let publisher = magicbus.createPublisher(broker);
+let consumer = magicbus.createConsumer(broker);
 
 // let AuthScope = AuthContext.AuthScope;
 // let endpointKey = fs.readFileSync(authConfig.endpointKeyPath);
@@ -35,9 +34,9 @@ let publisher = magicbus.createPublisher(broker);
 
 nameLogger.consumeFrom(magicbus);
 
-export { broker, publisher, subscriber };
+export { broker, consumer };
 
 export default context => {
-  context.magicbus = { broker, subscriber, publisher };
+  context.magicbus = { broker, consumer };
   return context;
 };
