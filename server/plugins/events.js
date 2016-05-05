@@ -1,11 +1,10 @@
 import moment from 'moment';
 import { db } from '../db';
-import nameLogger from '../logger';
 import Boom from 'boom';
-import _ from 'lodash';
 import stream from 'stream';
 
-const logger = nameLogger('events-route');
+// import nameLogger from '../logger';
+// const logger = nameLogger('events-route');
 
 const buildSQL = (since, maxResults) => {
   let limit = parseInt(maxResults, 10) || 1000;
@@ -40,7 +39,7 @@ const buildReferences = (result) => {
   return references;
 };
 
-const buildBy = (result) => {
+const buildBy = (result) => { // eslint-disable-line
   if (!result.endpointIds || !result.userIds) {
     return [];
   }
@@ -105,8 +104,9 @@ const plugin = {
       method: 'GET',
       path: '/events',
       config: {
-        tags: ['api', 'trusted'],
+        tags: ['api'],
         description: 'Queries events',
+        auth: 'token',
         plugins: {
           'hapi-swaggered': {
             parameters:[

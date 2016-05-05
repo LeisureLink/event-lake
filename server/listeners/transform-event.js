@@ -28,7 +28,7 @@ const getReferences = (payload, messageTypes) => {
   return [];
 };
 
-const toFieldArray = (obj) => {
+const toFieldArray = (obj) => { //eslint-disable-line
   let result = [];
   for (let key in obj) {
     if (typeof(obj[key]) === 'undefined' || obj[key] === null)

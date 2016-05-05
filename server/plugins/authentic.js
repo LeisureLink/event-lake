@@ -5,8 +5,10 @@ export default {
   register: voucher,
   options: {
     auth: {
-      issuer: 'event-lake',
-      audience: 'self',
+      issuer: 'test',
+      audience: 'test',
+      endpointId: 'event-lake',
+      keyName: 'self',
       privateKeyPath: path.join(__dirname, '../../event-lake-key.pem')
     },
     authentic: {

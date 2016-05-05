@@ -1,4 +1,4 @@
-import { db, events } from './db';
+import { events } from './db';
 import { google } from './env';
 import _ from 'lodash';
 import Promise from 'bluebird';
