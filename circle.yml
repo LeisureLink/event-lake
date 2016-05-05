@@ -14,21 +14,13 @@ test:
   override:
     - npm run ci
 deployment:
-  staging:
+  production:
     branch: master
     commands:
-      - npm install -g modulus
-      - npm run build
-      - modulus config set api_uri https://api-leisure-link.mod.ec
-      - echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" >> ~/$CIRCLE_PROJECT_REPONAME/.npmrc
-      - modulus deploy -p $CIRCLE_PROJECT_REPONAME-staging
-  production:
-    tag: /v.*/
-    commands:
-      - npm install -g modulus
-      - npm run build
-      - modulus config set api_uri https://api-leisure-link.mod.ec
-      - echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" >> ~/$CIRCLE_PROJECT_REPONAME/.npmrc
-      - openssl genpkey -outform PEM -out ~/$CIRCLE_PROJECT_REPONAME/$CIRCLE_PROJECT_REPONAME-key.pem -algorithm rsa -pkeyopt rsa_keygen_bits:2048
-      - openssl rsa -inform PEM -in ~/$CIRCLE_PROJECT_REPONAME/$CIRCLE_PROJECT_REPONAME-key.pem -pubout -out ~/$CIRCLE_PROJECT_REPONAME/$CIRCLE_PROJECT_REPONAME-key.pub
-      - modulus deploy -p $CIRCLE_PROJECT_REPONAME
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS $DOCKER_STORE_URL
+      - docker build -t "quay.io/leisurelink/event-lake:master-${CIRCLE_BUILD_NUM}" .
+      - docker tag -f "quay.io/leisurelink/event-lake:master-${CIRCLE_BUILD_NUM}" "quay.io/leisurelink/event-lake:master-latest"
+      - docker push quay.io/leisurelink/event-lake:master-${CIRCLE_BUILD_NUM}
+      - docker push quay.io/leisurelink/event-lake:master-latest
+      - docker logout $DOCKER_STORE_URL
+      - curl -s -d "name=${CIRCLE_PROJECT_REPONAME}&tag=master-${CIRCLE_BUILD_NUM}" "https://deployer.leisurelink.com/deploy-gate/v1/services/?apikey=${DOCKER_DEPLOYER_KEY_PROD}"
