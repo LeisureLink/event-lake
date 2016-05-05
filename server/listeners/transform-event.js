@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid';
+import _ from 'lodash';
 
 const hasMessageTypeStartingWith = (messageTypes, starting) => {
   for (let messageType of messageTypes) {
@@ -11,13 +12,18 @@ const hasMessageTypeStartingWith = (messageTypes, starting) => {
 
 const getReferences = (payload, messageTypes) => {
   if (payload.references) {
-    return payload.references;
+    return _.map(payload.references, reference => {
+      return {
+        source: `${reference.source}`,
+        id: `${reference.id}`
+      };
+    });
   }
   if (payload.bookingId && hasMessageTypeStartingWith(messageTypes, 'accounting-service.')) {
-    return [{ source: 'imp.booking', id: payload.bookingId }];
+    return [{ source: 'imp.booking', id: `${payload.bookingId}` }];
   }
   if (payload.id) {
-    return [{ source: 'adaptors.bdc.booking', id: payload.id }];
+    return [{ source: 'adaptors.bdc.booking', id: `${payload.id}` }];
   }
   return [];
 };
@@ -29,10 +35,10 @@ const toFieldArray = (obj) => {
       continue;
     if (typeof(obj[key]) === 'object') {
       for (let subproperty of toFieldArray(obj[key])) {
-        result.push({ name: `${key}.${subproperty.name}`, value: subproperty.value });
+        result.push({ name: `${key}.${subproperty.name}`, value: `${subproperty.value}` });
       }
     } else {
-      result.push({ name: key, value: `${obj[key]}\nforce newline` });
+      result.push({ name: `${key}`, value: `${obj[key]}` });
     }
   }
   return result;
@@ -47,7 +53,7 @@ export default (payload, messageTypes, raw) => {
       properties: toFieldArray(raw.properties),
       headers: toFieldArray(raw.properties.headers),
     },
-    when: raw.properties.headers.Date || new Date(),
+    when: payload.when || raw.properties.headers.Date || new Date(),
     types: messageTypes
   };
 };
