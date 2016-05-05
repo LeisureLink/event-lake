@@ -11,7 +11,7 @@ import {
 } from './env';
 
 // import fs from 'fs';
-let broker = magicbus.createBroker('imp', 'event-lake', rabbitConfig);
+let broker = magicbus.createBroker('internal', 'event-lake', rabbitConfig);
 let consumer = magicbus.createConsumer(broker);
 
 // let AuthScope = AuthContext.AuthScope;

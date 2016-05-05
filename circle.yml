@@ -5,6 +5,7 @@ machine:
     version: 4
   services:
     - rabbitmq-server
+    - docker
 dependencies:
   pre:
     - rm -rf ~/$CIRCLE_PROJECT_REPONAME/node_modules
