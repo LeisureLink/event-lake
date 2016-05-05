@@ -3,6 +3,7 @@ import { db } from '../db';
 import nameLogger from '../logger';
 import Boom from 'boom';
 import _ from 'lodash';
+import stream from 'stream';
 
 const logger = nameLogger('events-route');
 
@@ -55,21 +56,48 @@ const buildBy = (result) => {
   return references;
 };
 
-const buildResponse = (results) => {
-  return _.map(results, (result) => {
-
-    return {
-      correlationId: result.correlationId,
-      when: result.when,
-      types: result.types.split('|'),
-      event: {
-        references: buildReferences(result),
-        payload: result.event_payload
-      },
-      by: buildBy(result)
-    };
-  });
+const buildResult = (result) => {
+  return {
+    correlationId: result.correlationId,
+    when: result.when,
+    types: result.types.split('|'),
+    event: {
+      references: buildReferences(result),
+      payload: result.event_payload
+    },
+    by: buildBy(result)
+  };
 };
+
+class BigQueryToResponse extends stream.Transform {
+  constructor() {
+    super({ objectMode: true });
+  }
+
+  _transform(data, enc, next) {
+    this.push(buildResult(data));
+    next();
+  }
+}
+
+class ObjectToString extends stream.Transform {
+  constructor() {
+    super({ readableObjectMode: false, writableObjectMode: true });
+    this.first = true;
+  }
+
+  _transform(chunk, enc, next) {
+    this.push(this.first ? '[' : ',');
+    this.first = false;
+    this.push(JSON.stringify(chunk, enc));
+    next();
+  }
+
+  _flush(next){
+    this.push(']');
+    next();
+  }
+}
 
 const plugin = {
   register:  (server, options, next) => {
@@ -104,15 +132,14 @@ const plugin = {
           reply(Boom.badRequest('Please specify a "since" query string parameter that is a valid date.'));
           return;
         }
-        logger.info(`Querying for next 1000 rows since ${since}`);
-        db.query(buildSQL(since, request.query.maxResults),
-          function (err, results) {
-            if (err) {
-              reply(Boom.wrap(err));
-              return;
-            }
-            reply(buildResponse(results));
-          });
+        let dataStream = db.query(buildSQL(since, request.query.maxResults));
+        dataStream.on('error', (err) => {
+          reply(Boom.wrap(err));
+        });
+        reply(dataStream
+          .pipe(new BigQueryToResponse())
+          .pipe(new ObjectToString()))
+        .type('application/json');
       }
     });
     return next();
