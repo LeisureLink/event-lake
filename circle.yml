@@ -23,4 +23,4 @@ deployment:
       - docker push quay.io/leisurelink/event-lake:master-${CIRCLE_BUILD_NUM}
       - docker push quay.io/leisurelink/event-lake:master-latest
       - docker logout $DOCKER_STORE_URL
-      - curl -s -d "name=${CIRCLE_PROJECT_REPONAME}&tag=master-${CIRCLE_BUILD_NUM}" "https://deployer.leisurelink.com/deploy-gate/v1/services/?apikey=${DOCKER_DEPLOYER_KEY_PROD}"
+#      - curl -s -d "name=${CIRCLE_PROJECT_REPONAME}&tag=master-${CIRCLE_BUILD_NUM}" "https://deployer.leisurelink.com/deploy-gate/v1/services/?apikey=${DOCKER_DEPLOYER_KEY_PROD}"
