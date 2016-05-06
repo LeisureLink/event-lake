@@ -4,6 +4,8 @@ import { auth } from '../env';
 let endpointId = auth.endpointKeyId.split('/')[0];
 let keyName = auth.endpointKeyId.split('/')[1];
 
+console.log(auth.authenticKeyPath);
+
 export default {
   register: voucher,
   options: {
@@ -15,8 +17,8 @@ export default {
       privateKeyPath: auth.endpointKeyPath
     },
     authentic: {
-      url: process.env.EVENT_LAKE_AUTHENTIC_URL,
-      publicKeyPath: process.env.EVENT_LAKE_AUTHENTIC_PUBLIC_KEY_PATH
+      url: auth.authenticUrl,
+      publicKeyPath: auth.authenticKeyPath
     }
   }
 };

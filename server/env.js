@@ -32,7 +32,7 @@ setOrDefault('port', process.env.PORT || port);
 // Authentic
 setOrDefault('trusted_endpoint_key_id', `event-lake/${process.env.PROJECT_ID || 'self'}`);
 setOrDefault('trusted_endpoint_keyfile', path.join(path.dirname(__dirname), 'event-lake-key.pem'));
-setOrDefault('jwt_issuerpub', path.join(path.dirname(__dirname), './event-lake-key.pub'));
+setOrDefault('trusted_endpoint_keypub', path.join(path.dirname(__dirname), './event-lake-key.pub'));
 setOrDefault('jwt_issuer', 'test');
 setOrDefault('jwt_audience', 'test');
 
@@ -46,7 +46,7 @@ if (!isEnv('production') && !isEnv('stage')) {
   });
 
   setOrDefault('authentic_url', 'http://localhost:10010/'); // Requires a slash at the end!!!!
-  setOrDefault('authentic_key_path', path.resolve(__dirname, '../../authentic-api/test/test-key.pub'));
+  setOrDefault('jwt_issuerpub', path.resolve(__dirname, '../../authentic-api/test/test-key.pub'));
 
   //rabbitMQ
   setOrDefault('rabbitmq_host', 'localhost');
@@ -76,7 +76,7 @@ let config = {
     endpointKeyId: get('trusted_endpoint_key_id'),
     endpointKeyPath: get('trusted_endpoint_keyfile'),
     endpointPrivateKey: fs.readFileSync(get('trusted_endpoint_keyfile')),
-    endpointPublicKey: fs.readFileSync(get('jwt_issuerpub')),
+    endpointPublicKey: fs.readFileSync(get('trusted_endpoint_keypub')),
     issuer: get('jwt_issuer'),
     audience: get('jwt_audience'),
     authenticKeyPath: get('jwt_issuerpub'),
