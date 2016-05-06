@@ -46,7 +46,7 @@ if (!isEnv('production') && !isEnv('stage')) {
   });
 
   setOrDefault('authentic_url', 'http://localhost:10010/'); // Requires a slash at the end!!!!
-  setOrDefault('jwt_issuerpub', path.resolve(__dirname, '../../authentic-api/test/test-key.pub'));
+  setOrDefault('jwt_issuer_pub', path.resolve(__dirname, '../../authentic-api/test/test-key.pub'));
 
   //rabbitMQ
   setOrDefault('rabbitmq_host', 'localhost');
@@ -79,7 +79,7 @@ let config = {
     endpointPublicKey: fs.readFileSync(get('trusted_endpoint_keypub')),
     issuer: get('jwt_issuer'),
     audience: get('jwt_audience'),
-    authenticKeyPath: get('jwt_issuerpub'),
+    authenticKeyPath: get('jwt_issuer_pub'),
     authenticUrl: get('authentic_url')
   },
   rabbit: {
