@@ -9,7 +9,7 @@ const settings = {
   }
 };
 
-if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'stage'){
+if((process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'stage') && process.env.LOGSTASH_HOST){
   settings.transports.Logstash = {
     host: process.env.LOGSTASH_HOST,
     port: parseInt(process.env.LOGSTASH_PORT, 10),
