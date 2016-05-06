@@ -93,7 +93,7 @@ class ObjectToString extends stream.Transform {
   }
 
   _flush(next){
-    this.push(']');
+    this.push(this.first ? '[]' : ']');
     next();
   }
 }
