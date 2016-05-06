@@ -10,7 +10,9 @@
     "coverage": "istanbul cover node_modules/.bin/_mocha -- -u exports -R spec test",
     "build": "babel server/ -s inline -d build/ --copy-files",
     "build:watch": "babel server/ -s inline -d build/ --copy-files --watch",
-    "prepublish": "rm -rf build; npm run build"
+    "prepublish": "rm -rf build; npm run build",
+    "postinstall": "npm run build",
+    "start": "node ."
   },
   "engines": {
     "node": "4"
