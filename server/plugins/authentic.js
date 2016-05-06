@@ -1,15 +1,18 @@
 import voucher from '@leisurelink/hapi-voucher';
-import path from 'path';
+import { auth } from '../env';
+
+let endpointId = auth.endpointKeyId.split('/')[0];
+let keyName = auth.endpointKeyId.split('/')[1];
 
 export default {
   register: voucher,
   options: {
     auth: {
-      issuer: 'test',
-      audience: 'test',
-      endpointId: 'event-lake',
-      keyName: 'self',
-      privateKeyPath: path.join(__dirname, '../../event-lake-key.pem')
+      issuer: auth.issuer,
+      audience: auth.audience,
+      endpointId: endpointId,
+      keyName: keyName,
+      privateKeyPath: auth.endpointKeyPath
     },
     authentic: {
       url: process.env.EVENT_LAKE_AUTHENTIC_URL,
