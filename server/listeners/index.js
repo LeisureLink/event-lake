@@ -1,7 +1,7 @@
 import transformEvent from './transform-event';
-import CreateWriteStream from '../event-write-stream';
+import CreateWriteBatch from '../event-batch';
 
-let events = CreateWriteStream();
+let events = CreateWriteBatch();
 
 export default async (context) =>{
   const { magicbus } = context;

@@ -31,7 +31,7 @@
   "dependencies": {
     "@leisurelink/env-configurator": "^0.4.2",
     "@leisurelink/hapi-swaggered-ui": "^1.0.4",
-    "@leisurelink/hapi-voucher": "^1.3.0",
+    "@leisurelink/hapi-voucher": "^2.0.0",
     "@leisurelink/joi-box": "^0.2.4",
     "@leisurelink/magicbus": "^2.0.0",
     "@leisurelink/skinny-loggins": "^1.2.0",

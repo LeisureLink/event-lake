@@ -102,11 +102,11 @@ const plugin = {
   register:  (server, options, next) => {
     server.route({
       method: 'GET',
-      path: '/events',
+      path: '/v1/{lang}/events',
       config: {
         tags: ['api'],
         description: 'Queries events',
-        auth: 'token',
+        auth: 'api-key',
         plugins: {
           'hapi-swaggered': {
             parameters:[
