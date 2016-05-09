@@ -39,9 +39,10 @@ Promise.resolve({})
         }
         if (!event) {
           logger.info('All events exported.');
-          process.exit(0);
+          return;
         }
         event.event.correlationId = event['_id'];
+        event.event.when = event.created;
         publisher.publish(event.key, event.event);
       });
       // for (let event of allEvents) {

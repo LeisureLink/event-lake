@@ -12,6 +12,6 @@ export default async (context) =>{
     return events.write(transformed);
   };
 
-  await consumer.startConsuming(handler);
+  await consumer.startConsuming(handler, { limit: 10000 });
   return context;
 };

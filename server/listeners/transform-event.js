@@ -48,7 +48,7 @@ export default (payload, messageTypes, raw) => {
   return {
     correlationId: raw.properties.headers.correlationId || uuid(),
     event: {
-      references: getReferences(payload, payload.messageTypes),
+      references: getReferences(payload, messageTypes),
       payload: JSON.stringify(payload),
       properties: toFieldArray(raw.properties),
       headers: toFieldArray(raw.properties.headers),
