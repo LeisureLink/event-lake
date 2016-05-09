@@ -16,7 +16,8 @@ test:
     - npm run ci
 deployment:
   production:
-    branch: master
+    tag: /v.*/
+    owner: LeisureLink
     commands:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS $DOCKER_STORE_URL
       - docker build -t "quay.io/leisurelink/event-lake:master-${CIRCLE_BUILD_NUM}" .
