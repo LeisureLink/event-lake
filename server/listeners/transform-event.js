@@ -28,6 +28,32 @@ const getReferences = (payload, messageTypes) => {
   return [];
 };
 
+const getBy = (payload) => { //eslint-disable-line
+  let by = [];
+  if (_.isArray(payload.by)) {
+    for (let item of payload.by) {
+      if (item.endpoint && item.endpoint.id) {
+        by.push({ endpoint: { id: item.endpoint.id, token: item.endpoint.token } });
+      }
+      if (item.user && item.user.id) {
+        by.push({ user: { id: item.user.id, token: item.user.token } });
+      }
+    }
+  } else if (payload.by) {
+    if (payload.by.user && payload.by.user.id) {
+      by.push({ user: { id: payload.by.user.id, token: payload.by.user.token } });
+    }
+    if (_.isArray(payload.by.endpoints)) {
+      for (let item of payload.by.endpoints) {
+        if (item.id) {
+          by.push({ endpoint: { id: item.id, token: item.token } });
+        }
+      }
+    }
+  }
+  return by;
+};
+
 const toFieldArray = (obj) => { //eslint-disable-line
   let result = [];
   for (let key in obj) {
@@ -54,6 +80,7 @@ export default (payload, messageTypes, raw) => {
       headers: toFieldArray(raw.properties.headers),
     },
     when: payload.when || raw.properties.headers.Date || new Date(),
-    types: messageTypes
+    types: messageTypes,
+    by: getBy(payload)
   };
 };
