@@ -1,6 +1,6 @@
 {
   "name": "event-lake",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Responsible for long term storage and retrieval of events.",
   "main": "./build/index.js",
   "scripts": {
