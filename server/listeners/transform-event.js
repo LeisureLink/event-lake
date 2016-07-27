@@ -15,7 +15,7 @@ const getReferences = (payload, messageTypes) => {
     return _.map(payload.references, reference => {
       return {
         source: `${reference.source}`,
-        id: `${reference.id}`
+        id: `${reference.id || reference.sourceId}`
       };
     });
   }
