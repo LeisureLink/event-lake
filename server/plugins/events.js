@@ -3,12 +3,12 @@ import { db } from '../db';
 import Boom from 'boom';
 import stream from 'stream';
 
-// import nameLogger from '../logger';
-// const logger = nameLogger('events-route');
+import nameLogger from '../logger';
+const logger = nameLogger('events-route');
 
-const buildSQL = (since, maxResults) => {
+const buildSQL = (type, since, maxResults) => {
   let limit = parseInt(maxResults, 10) || 1000;
-  return `
+  let sql = `
 SELECT
   correlationId,
   when,
@@ -20,10 +20,13 @@ SELECT
   GROUP_CONCAT(by.user.id, '|') AS userIds,
 FROM EventLake.Events
 WHERE when >= '${since.toISOString()}'
+${type ? `OMIT RECORD IF EVERY(types<>'${type}')` : '' }
 GROUP BY correlationId, when, event.payload
 ORDER BY when
 LIMIT ${limit}
 `;
+  logger.debug(sql);
+  return sql;
 };
 
 const buildReferences = (result) => {
@@ -117,6 +120,13 @@ const plugin = {
                 required:false,
                 type:'string'
               },
+              {
+                name:'type',
+                in:'query',
+                description:'Limit response to this type of event',
+                required:false,
+                type:'string'
+              },
             ]
           }
         }
@@ -132,9 +142,9 @@ const plugin = {
           reply(Boom.badRequest('Please specify a "since" query string parameter that is a valid date.'));
           return;
         }
-        let dataStream = db.query(buildSQL(since, request.query.maxResults));
+        let dataStream = db.query(buildSQL(request.query.type, since, request.query.maxResults));
         dataStream.on('error', (err) => {
-          reply(Boom.wrap(err));
+          logger.error(err);
         });
         reply(dataStream
           .pipe(new BigQueryToResponse())
